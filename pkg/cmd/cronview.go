@@ -42,5 +42,8 @@ func prepareAdd(line string)(*models.Crontab, error) {
 	if len(splitter) == 0 {
 		return nil, fmt.Errorf("unable to parse input data")
 	}
-	return &models.Crontab{}, nil
+	return &models.Crontab{
+		Schedule: splitter[0],
+		Command: splitter[1],
+	}, nil
 }

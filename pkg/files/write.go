@@ -4,8 +4,14 @@ import "os"
 
 // WriteToFile write crontab content to file
 func WriteToFile(f *os.File) error {
-	err := f.Truncate(0)
+	f, err := os.OpenFile(filename, os.O_APPEND|os.O_WRONLY, 0600)
 	if err != nil {
+		return err
+	}
+
+	defer f.Close()
+
+	if _, err = f.WriteString(text); err != nil {
 		return err
 	}
 
