@@ -1,9 +1,12 @@
 package cmd
 
 import (
+	"strings"
+	"fmt"
 	"os"
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
+	"github.com/saromanov/cronview/pkg/models"
 )
 // Build provides handling of the commands
 func Build(args []string) error {
@@ -27,5 +30,17 @@ func Build(args []string) error {
 }
 
 func add(c *cli.Context) error {
+	line := c.String("line")
+	if line == "" {
+		return fmt.Errorf("line is not defined")
+	}
 	return nil
+}
+
+func prepareAdd(line string)(*models.Crontab, error) {
+	splitter := strings.Split(line, "  ")
+	if len(splitter) == 0 {
+		return nil, fmt.Errorf("unable to parse input data")
+	}
+	return &models.Crontab{}, nil
 }
