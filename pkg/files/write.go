@@ -16,7 +16,7 @@ func Write(s *models.Crontab) error {
 
 	defer f.Close()
 	for _, r := range s.Records {
-		if _, err = f.WriteString(fmt.Sprintf("%s %s", r.Schedule, r.Command)); err != nil {
+		if _, err = f.WriteString(fmt.Sprintf("%s %s\n", r.Schedule, r.Command)); err != nil {
 			return err
 		}
 	}

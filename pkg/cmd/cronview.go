@@ -63,7 +63,7 @@ func add(c *cli.Context) error {
 		},
 		},
 	}); err != nil {
-		return fmt.Errorf("unable to write to crontab file")
+		return fmt.Errorf("unable to write to crontab file: %v", err)
 	}
 	return nil
 }
