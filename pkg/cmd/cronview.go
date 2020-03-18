@@ -10,11 +10,11 @@ func Build(args []string) error {
 	app := &cli.App{
 		Name:  "cronview",
 		Usage: "create puppet for the project",
-		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:  "add",
-				Value: "",
-				Usage: "adding of the new scenario",
+		Commands: []*cli.Command{
+			{
+				Name:   "add",
+				Usage:  "add provides adding of the new command",
+				Action: build,
 			},
 		},
 	}
@@ -23,5 +23,9 @@ func Build(args []string) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func add(c *cli.Context) error {
 	return nil
 }
