@@ -1,14 +1,14 @@
 package cmd
 
 import (
-	"strings"
 	"fmt"
 	"os"
-	"github.com/sirupsen/logrus"
-	"github.com/urfave/cli/v2"
-	"github.com/saromanov/cronview/pkg/models"
+	"strings"
+
 	"github.com/saromanov/cronview/pkg/files"
+	"github.com/urfave/cli/v2"
 )
+
 // Build provides handling of the commands
 func Build(args []string) error {
 	app := &cli.App{
@@ -18,7 +18,7 @@ func Build(args []string) error {
 			{
 				Name:   "add",
 				Usage:  "add provides adding of the new command",
-				Action: build,
+				Action: add,
 			},
 		},
 	}
@@ -46,13 +46,10 @@ func add(c *cli.Context) error {
 	return nil
 }
 
-func prepareAdd(line string)(*models.Crontab, error) {
+func prepareAdd(line string) ([]string, error) {
 	splitter := strings.Split(line, "  ")
 	if len(splitter) == 0 {
 		return nil, fmt.Errorf("unable to parse input data")
 	}
-	return &models.Crontab{
-		Schedule: splitter[0],
-		Command: splitter[1],
-	}, nil
+	return []string{line}, nil
 }

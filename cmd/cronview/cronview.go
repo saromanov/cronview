@@ -1,4 +1,4 @@
-package cronview
+package main
 
 import (
 	"os"
