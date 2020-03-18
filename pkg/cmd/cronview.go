@@ -7,6 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/urfave/cli/v2"
 	"github.com/saromanov/cronview/pkg/models"
+	"github.com/saromanov/cronview/pkg/files"
 )
 // Build provides handling of the commands
 func Build(args []string) error {
@@ -33,6 +34,14 @@ func add(c *cli.Context) error {
 	line := c.String("line")
 	if line == "" {
 		return fmt.Errorf("line is not defined")
+	}
+	mod, err := prepareAdd(line)
+	if err != nil {
+		return err
+	}
+
+	if err := files.Write(mod); err != nil {
+		return fmt.Errorf("unable to write to crontab file")
 	}
 	return nil
 }
