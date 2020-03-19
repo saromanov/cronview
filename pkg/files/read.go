@@ -1,8 +1,8 @@
 package files
 
 import (
-	"fmt"
 	"bufio"
+	"fmt"
 	"io"
 	"os"
 
@@ -21,6 +21,7 @@ func Read(file string) (*models.Crontab, error) {
 // Read returns crontab file
 func read(r io.Reader, strict bool) (*models.Crontab, error) {
 	s := bufio.NewScanner(r)
+	cronTab := &models.Crontab{}
 	for s.Scan() {
 		b := s.Bytes()
 		if len(b) == 0 || b[0] == byte('#') {
@@ -29,7 +30,30 @@ func read(r io.Reader, strict bool) (*models.Crontab, error) {
 		if err := s.Err(); err != nil {
 			return nil, err
 		}
-		fmt.Println(string(b))
+		idx, schedule := getCronSchedule(b)
+		if idx == 0 || schedule == "" {
+			return nil, fmt.Errorf("unable to get cron schedule")
+		}
+		cronTab.Records = append(cronTab.Records, models.Record{
+			Schedule: schedule,
+			Command:  string(b[idx : len(b)-1]),
+		})
 	}
-	return &models.Crontab{}, nil
+	return cronTab, nil
+}
+
+// return cron schedule based of cron task line
+// its return index from beginning of the command
+// and raw cron schedule
+func getCronSchedule(data []byte) (int, string) {
+	spaces := 0
+	for i, d := range data {
+		if d == byte(' ') {
+			spaces++
+		}
+		if spaces == 5 {
+			return i, string(data[0:i])
+		}
+	}
+	return 0, ""
 }
