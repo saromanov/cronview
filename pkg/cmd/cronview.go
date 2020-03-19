@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/saromanov/cronview/pkg/commands"
 	"github.com/saromanov/cronview/pkg/files"
 	"github.com/saromanov/cronview/pkg/models"
 	"github.com/urfave/cli/v2"
@@ -31,6 +32,11 @@ func Build(args []string) error {
 				Name:   "add",
 				Usage:  "add provides adding of the new command",
 				Action: add,
+			},
+			{
+				Name:   "list",
+				Usage:  "showing list of cron tasks for current user",
+				Action: list,
 			},
 		},
 	}
@@ -64,6 +70,23 @@ func add(c *cli.Context) error {
 		},
 	}); err != nil {
 		return fmt.Errorf("unable to write to crontab file: %v", err)
+	}
+	return nil
+}
+
+// return list of cron tasks
+func list(c *cli.Context) error {
+	name := "lst.tmp"
+	if err := commands.ExecAndWrite(name); err != nil {
+		return fmt.Errorf("unable to execute command: %v", err)
+	}
+
+	data, err := files.Read(name)
+	if err != nil {
+		return fmt.Errorf("unable to read from %s: %v", name, err)
+	}
+	for _, d := range data.Records {
+		fmt.Println("DATA: ", d)
 	}
 	return nil
 }
